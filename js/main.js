@@ -45,15 +45,20 @@ function calculate(now, days) {
 }
 
 function dhms(now, then) {
-    // change dates to time
+    // change dates to time in milliseconds since 1/1/1970
     now = now.getTime();
     then = then.getTime();
-    // get countdown time
+    // get countdown time in milliseconds
     let time = then - now;
-    // get day, hour, minute, and second of countdown time
+    // converts ms to d, h, m, and s
+    // floor in case fraction of d, h, m, or s
+    // d = ms / ((s/ms) (m/s) (h/m) (d/h))
     let d = Math.floor(time / (1000 * 60 * 60 * 24));
+    // h = (fraction of d) / ((s/ms) (m/s) (h/m))
     let h = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    // m = (fraction of h) / ((s/ms) (m/s))
     let m = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+    // s = (fraction of m) / (s/ms)
     let s = Math.floor((time % (1000 * 60)) / 1000);
     return [d, h, m, s];
 }
@@ -76,7 +81,13 @@ function displayTimer(d, h, m, s) {
         }
     }
     // display time
-    countdown.textContent = d + 'd ' + h + 'h ' + m + 'm ' + s + 's ';
+    countdown.textContent = d + 'd ' + h + 'h ' + m + 'm ' + s + 's';
+    /* // if timer reaches end
+    if (countdown.textContent === '00d 00h 00m 00s') {
+        // play bell
+        let audio = new Audio('../css/bell.wav');
+        audio.play();
+    }*/
 }
 
 // get countdown when page loads
